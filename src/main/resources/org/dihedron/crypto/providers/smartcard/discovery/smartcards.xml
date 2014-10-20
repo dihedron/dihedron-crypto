@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<smartcards xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://code.google.com/p/dihedron-crypto/smartcards.xsd">
+	<smartcard atr="3B7D95000080318065B08302047E83009000">
+		<!-- Gemalto, year 2008 -->
+		<description>PKCS#11 Gemplus Cryptoki Multiplexer</description>
+		<manufacturer>Gemalto</manufacturer>
+		<drivers>
+			<driver platform="win32">
+				<paths>
+					<path>${PROGRAMFILES}\Gemplus\GemSafe Libraries\BIN\gclib.dll</path>
+				</paths>
+			</driver>
+		</drivers>
+	</smartcard>
+	<smartcard atr="3BDF18008131FE7D006B1F0C0180010001434E53103180F2">
+		<!-- Athena USB token, year 2011 -->
+		<description>Athena USB Token</description>
+		<manufacturer>Athena</manufacturer>
+		<drivers>
+			<driver platform="win32">
+				<paths>
+					<path>@{ALL_DRIVES}\ActalisONE\Java\bin\bit4tpki.dll</path>
+				</paths>
+			</driver>
+			<driver platform="lnx64">
+				<paths>
+					<path>/usr/share/bit4id/x/libbit4xpki.so</path>
+					<path>/usr/lib/bit4id/libbit4xpki.so</path>
+					<path>/usr/lib/libbit4xpki.so</path>
+					<path>@{ALL_DRIVES}/ArubaKeyLinux/Main_lnx/libbit4xpki.so</path>
+				</paths>
+			</driver>
+		</drivers>
+	</smartcard>
+	<smartcard atr="3B951840FF6201020104">
+		<!-- Schlumberger, year 2005 -->
+		<description>PKCS#11 </description>
+		<manufacturer>Schlumberger</manufacturer>
+		<drivers>
+			<driver platform="win32">
+				<paths>
+					<path>${PROGRAMFILES}\Schlumberger\Smart Cards and Terminals\Cyberflex Access Kits\v4\slbCk.dll</path>
+				</paths>
+			</driver>
+		</drivers>
+	</smartcard>
+	<smartcard atr="3BDF18008131FE7D006B150C0181011101434E53103180E8">
+		<!-- Athena, year 2011 (SHA-256) -->
+		<description>PKCS#11 Athena - SHA-256 (production - series 1)</description>
+		<manufacturer>Athena</manufacturer>
+		<drivers>
+			<driver platform="win32">
+				<paths>
+					<path>${WINDIR}\system32\asepkcs.dll</path>
+				</paths>
+			</driver>
+			<driver platform="lnx32">
+				<paths>
+					<path>/lib/libASEP11.so</path>
+				</paths>
+			</driver>			
+			<driver platform="lnx64">
+				<paths>
+					<path>/lib64/libASEP11.so</path>
+				</paths>
+			</driver>			
+		</drivers>
+	</smartcard>
+	<smartcard atr="3BDF18008131FE7D006B020C0182011101434E53103180FC">
+		<!-- Athena, year 2014 (SHA-256) -->
+		<description>PKCS#11 Athena - SHA-256 (production - series 2)</description>
+		<manufacturer>Athena</manufacturer>
+		<drivers>
+			<driver platform="win32">
+				<paths>
+					<path>${WINDIR}\system32\asepkcs.dll</path>
+				</paths>
+			</driver>
+			<driver platform="lnx32">
+				<paths>
+					<path>/lib/libASEP11.so</path>
+				</paths>
+			</driver>			
+			<driver platform="lnx64">
+				<paths>
+					<path>/lib64/libASEP11.so</path>
+				</paths>
+			</driver>			
+		</drivers>
+	</smartcard>	
+	<smartcard atr="3BDF18008131FE7D006B150C0180011101434E53103180E9">
+		<!-- Athena, year 2011 (SHA-256) -->
+		<description>PKCS#11 Athena - SHA-256 (certification)</description>
+		<manufacturer>Athena</manufacturer>
+		<drivers>
+			<driver platform="win32">
+				<paths>
+					<path>${WINDIR}\system32\asepkcs.dll</path>
+				</paths>
+			</driver>
+			<driver platform="lnx32">
+				<paths>
+					<path>/lib/libASEP11.so</path>
+				</paths>
+			</driver>			
+			<driver platform="lnx64">
+				<paths>
+					<path>/lib64/libASEP11.so</path>
+				</paths>
+			</driver>			
+		</drivers>
+	</smartcard>
+	<smartcard atr="3BFF1800FF8131FE55006B02090303010101434E531031809D">
+		<!-- T&S DS/2048 (LB) Aruba ST Incard CNS, year 2013 (SHA-256) -->
+		<description>Athena ST Incard CNS</description>
+		<manufacturer>Aruba</manufacturer>
+		<drivers>
+			<driver platform="win32">
+				<paths>
+					<path>${WINDIR}\system32\bit4ipki.dll</path>
+					<path>@{ALL_DRIVES}Main\akxloader.dll</path>
+				</paths>
+			</driver>
+			<driver platform="win64">
+				<paths>
+					<path>${WINDIR}\sysWOW64\bit4ipki.dll</path>
+				</paths>
+			</driver>
+		</drivers>
+	</smartcard>		
+</smartcards>

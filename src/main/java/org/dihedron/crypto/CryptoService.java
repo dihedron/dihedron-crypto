@@ -1,0 +1,53 @@
+/**
+ * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved.
+ * 
+ * This file is part of the Crypto library ("Crypto").
+ *
+ * Crypto is free software: you can redistribute it and/or modify it under 
+ * the terms of the GNU Lesser General Public License as published by the Free 
+ * Software Foundation, either version 3 of the License, or (at your option) 
+ * any later version.
+ *
+ * Crypto is distributed in the hope that it will be useful, but WITHOUT ANY 
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR 
+ * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more 
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with Crypto. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.dihedron.crypto;
+
+import java.security.Security;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Andrea Funto'
+ */
+public abstract class CryptoService {
+	
+	/**
+	 * The logger
+	 */
+	private static final Logger logger = LoggerFactory.getLogger(CryptoService.class);
+
+	/**
+	 * The library startup method; this method installs the required security 
+	 * providers and should be invoked prior to any operations pertaining to 
+	 * cryptography and digital signature.
+	 */
+	static {
+		logger.info("installing BouncyCastle security provider...");		
+		Security.addProvider(new BouncyCastleProvider());		
+		logger.info("... done installing providers!");
+	}
+	
+	/**
+	 * Protected constructor, to be used only by inheriting classes.
+	 */
+	protected CryptoService() {
+	}
+}

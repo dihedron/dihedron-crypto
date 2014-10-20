@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2011-2013 Andrea Funto'. All rights reserved. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="smartcards">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="smartcard" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="smartcard">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="description" minOccurs="0"/>
+				<xs:element ref="manufacturer" minOccurs="0"/>
+				<xs:element ref="drivers" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="atr" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="paths">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="path" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="path" type="xs:string"/>
+	<xs:element name="manufacturer" type="xs:string"/>
+	<xs:element name="drivers">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="driver" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="driver">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="paths"/>
+			</xs:sequence>
+			<xs:attribute name="platform" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="win32"/>
+						<xs:enumeration value="win64"/>
+						<xs:enumeration value="lnx32"/>
+						<xs:enumeration value="lnx64"/>
+						<xs:enumeration value="mac32"/>
+						<xs:enumeration value="mac64"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="description" type="xs:string"/>
+</xs:schema>
