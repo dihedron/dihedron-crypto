@@ -1,7 +1,7 @@
-dihedron-commons
+dihedron-crypto
 ================
 
-This project contains a set of common utilities which can be (re-)used across
-Java projects. Some utilities help circumvent problems with the Java6 API, 
-some others try to make the use of certain Java features easier, and some 
-provide a basic set of more complex functionalities (called "patterns").
+This project contains a set of cryptography-related utilities, such as a
+set of classes for discovering and loading smart cards into the JVM, plus
+a bunch of wrapper classes that make it easier to use security providers
+and KeyStores.
