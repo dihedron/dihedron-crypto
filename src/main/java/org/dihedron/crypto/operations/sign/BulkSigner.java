@@ -3,8 +3,6 @@
  */ 
 package org.dihedron.crypto.operations.sign;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.Provider;
 
 import org.dihedron.core.License;
@@ -18,59 +16,29 @@ import org.dihedron.crypto.exceptions.CryptoException;
 public abstract class BulkSigner extends Signer {
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param alias
+	 *   the alias of the certificate to be used for signing.
 	 * @param keyring
+	 *   the key ring, as a wrapper and helper to access the key store.
 	 * @param provider
+	 *   the security provider supporting and exposing the key store capabilities.
 	 * @throws CryptoException
+	 *   if any of the input parameters is null.
 	 */
 	public BulkSigner(String alias, KeyRing keyring, Provider provider) throws CryptoException {
 		super(alias, keyring, provider);
-		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
-	 * @see org.dihedron.crypto.operations.sign.Signer#sign(byte[])
+	/**
+	 * Signs the given set of data.
+	 * 
+	 * @param data
+	 *   the data to be signed.
+	 * @return
+	 *   the signed data as a byte array.
+	 * @throws CryptoException
 	 */
-	@Override
-	public byte[] sign(byte[] data) throws CryptoException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dihedron.crypto.operations.sign.Signer#sign(java.io.InputStream, java.io.OutputStream)
-	 */
-	@Override
-	public void sign(InputStream input, OutputStream output) throws CryptoException {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dihedron.crypto.operations.sign.Signer#verify(byte[])
-	 */
-	@Override
-	public boolean verify(byte[] signed) throws CryptoException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dihedron.crypto.operations.sign.Signer#verify(java.io.InputStream)
-	 */
-	@Override
-	public boolean verify(InputStream signed) throws CryptoException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dihedron.crypto.operations.sign.Signer#verify(byte[], byte[])
-	 */
-	@Override
-	public boolean verify(byte[] data, byte[] signature) throws CryptoException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	public abstract byte [] sign(byte [] data) throws CryptoException;	
 }

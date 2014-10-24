@@ -11,10 +11,7 @@ import java.io.OutputStream;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.Provider;
-import java.security.SignatureException;
 import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.dihedron.core.License;
 import org.dihedron.core.library.Traits;
@@ -27,8 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.AcroFields;
-import com.itextpdf.text.pdf.PdfPKCS7;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
@@ -37,7 +32,7 @@ import com.itextpdf.text.pdf.PdfStamper;
  * @author Andrea Funto'
  */
 @License
-public class PdfSigner extends Signer {
+public class PDFSigner extends Signer {
 	
 	@License
 	public enum Mode {
@@ -55,7 +50,7 @@ public class PdfSigner extends Signer {
 	/**
 	 * The logger. 
 	 */
-	private static Logger logger = LoggerFactory.getLogger(PdfSigner.class);
+	private static Logger logger = LoggerFactory.getLogger(PDFSigner.class);
 	
 	private Key key = null;
 	
@@ -63,7 +58,7 @@ public class PdfSigner extends Signer {
 	
 	private Mode mode = null;
 	
-	public PdfSigner(String alias, KeyRing keyring, Provider provider) throws CryptoException {
+	public PDFSigner(String alias, KeyRing keyring, Provider provider) throws CryptoException {
 		this(alias, keyring, provider, Mode.CONCURRENT);
 	}
 	
@@ -71,7 +66,7 @@ public class PdfSigner extends Signer {
 	 * Constructor.
 	 * @throws CryptoException 
 	 */
-	public PdfSigner(String alias, KeyRing keyring, Provider provider, Mode mode) throws CryptoException {
+	public PDFSigner(String alias, KeyRing keyring, Provider provider, Mode mode) throws CryptoException {
 		super(alias, keyring, provider);
 		this.mode = mode;
 
@@ -83,6 +78,7 @@ public class PdfSigner extends Signer {
 		logger.trace("PdfSigner initialised");
 	} 
 
+	@Override
 	public byte[] sign(byte[] data) throws CryptoException {
 		ByteArrayInputStream input = null;
 		ByteArrayOutputStream output = null;
@@ -127,6 +123,7 @@ public class PdfSigner extends Signer {
 //		return baos.toByteArray();
 	}
 	
+	@Override
 	public void sign(InputStream input, OutputStream output) throws CryptoException {
 		try {
 			PdfReader reader = new PdfReader(input);
@@ -155,47 +152,5 @@ public class PdfSigner extends Signer {
 			logger.error("invalid document: exception writing the PDF", e);
 			throw new CryptoException("document exception writing the PDF", e);
 		}
-	}
-	
-	public boolean verify(byte[] signed) throws CryptoException {
-		return verify(signed, null);
-	}
-
-	public boolean verify(byte[] signed, byte [] data) throws CryptoException {
-		boolean verified = false;
-		try {			
-			PdfReader reader = new PdfReader(signed);
-			AcroFields af = reader.getAcroFields();
-			ArrayList<String> names = af.getSignatureNames();
-			for (String name : names) {
-				logger.debug("signature name: {}", name);
-				logger.debug("signature covers whole document: {}", af.signatureCoversWholeDocument(name));
-				logger.debug("document revision: {} of {}", af.getRevision(name), af.getTotalRevisions());
-				PdfPKCS7 pk = af.verifySignature(name);
-				Calendar cal = pk.getSignDate();
-				Certificate[] pkc = pk.getCertificates();
-				logger.debug("subject: {}", PdfPKCS7.getSubjectFields(pk.getSigningCertificate()));
-				logger.debug("revision modified: {}", !pk.verify());
-				Object fails[] = PdfPKCS7.verifyCertificates(pkc, keyring.getKeyStore(), null, cal);
-				if (fails == null) {
-					logger.debug("certificates verified against the KeyStoreHelper");
-					verified = true;
-				} else {
-					logger.warn("certificate failed: {}", fails[1]);
-					verified = false;
-				}
-			}
-		} catch(IOException e) {
-			throw new CryptoException("I/O exception while verifying the signature", e); 
-		} catch (SignatureException e) {
-			throw new CryptoException("Signature exception while verifying the signature", e);
-		}
-		return verified;
-	}
-
-	@Override
-	public boolean verify(InputStream signed) throws CryptoException {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	}	
 }

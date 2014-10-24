@@ -28,8 +28,11 @@ public abstract class CryptoService {
 	 */
 	static {
 		logger.info("installing BouncyCastle security provider...");		
-		Security.addProvider(new BouncyCastleProvider());		
-		logger.info("... done installing providers!");
+		if(Security.addProvider(new BouncyCastleProvider()) == -1) {
+			logger.info("... provider was already available!");
+		} else {
+			logger.info("... done installing provider!");
+		}
 	}
 	
 	/**

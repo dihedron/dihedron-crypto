@@ -113,40 +113,4 @@ public abstract class Signer extends CryptoService {
 	 * @throws CryptoException
 	 */
 	public abstract void sign(InputStream input, OutputStream output) throws CryptoException;
-	
-	
-	/**
-	 * Verifies the signature of the given set of encapsulated data.
-	 * 
-	 * @param signed
-	 *   the encapsulated data.
-	 * @return
-	 *   whether the signature is valid.
-	 * @throws CryptoException
-	 */
-	public abstract boolean verify(byte [] signed) throws CryptoException;
-	
-	/**
-	 * Verifies the signature of the given set of encapsulated data.
-	 * 
-	 * @param signed
-	 *   the encapsulated data.
-	 * @return
-	 *   whether the signature is valid.
-	 * @throws CryptoException
-	 */
-	public abstract boolean verify(InputStream signed) throws CryptoException;
-	
-	/**
-	 * Verifies the signature of the given set of detached data.
-	 * 
-	 * @param data
-	 *   the data whose signature is to be verified.
-	 * @param signature
-	 *   the detached signature block.
-	 * @return
-	 *   whethe rthe signature verification was successful.
-	 * @throws CryptoException
-	 */
-	public abstract boolean verify(byte [] data, byte [] signature) throws CryptoException;
 }

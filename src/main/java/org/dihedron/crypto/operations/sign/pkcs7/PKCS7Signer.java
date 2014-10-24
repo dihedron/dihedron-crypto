@@ -118,8 +118,10 @@ public class PKCS7Signer extends Signer {
 
 			logger.info("certificate store is ready");
 			
-			ContentSigner signer = new JcaContentSignerBuilder(algorithm.toBouncyCastleCode()).setProvider(
-					(provider instanceof AutoCloseableProvider) ? ((AutoCloseableProvider)provider).getWrappedProvider() : provider).build((PrivateKey)key);			
+			ContentSigner signer = new JcaContentSignerBuilder(algorithm.toBouncyCastleCode())
+					.setProvider((provider instanceof AutoCloseableProvider) ? ((AutoCloseableProvider)provider).getWrappedProvider() : provider)
+					.build((PrivateKey)key);	
+			
 			DigestCalculatorProvider digest = new JcaDigestCalculatorProviderBuilder().setProvider("BC").build();
 			
 			SignerInfoGenerator signerinfo = 
@@ -187,7 +189,6 @@ public class PKCS7Signer extends Signer {
 	 */
 	@Override
 	public byte [] sign(byte [] data) throws CryptoException {
-
 		try(ByteArrayInputStream input = new ByteArrayInputStream(data); ByteArrayOutputStream output = new ByteArrayOutputStream()) {
 			sign(input, output);
 			return output.toByteArray();
@@ -195,7 +196,6 @@ public class PKCS7Signer extends Signer {
 			logger.error("error copying data from input stream to signature generator wrapper stream");
 			throw new CryptoException("error copying data from input stream to signature generator wrapper stream", e); 
 		}
-
 	}
 	
 	/**
@@ -218,113 +218,4 @@ public class PKCS7Signer extends Signer {
 			throw new CryptoException("error opening signature generator wrapper output stream", e);
 		}
 	}
-	
-	/**
-	 * Verifies that the signed data in the input array has not been tampered with.
-	 * 
-	 * @param signed
-	 *   an array of bytes containing a signed file.
-	 * @return
-	 *   whether the verification was successful.
-	 */
-	public boolean verify(byte [] signed) throws CryptoException {
-		return verify(signed, null);
-//		try {
-//			return verify(new CMSSignedData(new CMSProcessableByteArray(signed), null));
-//		} catch (CMSException e) {
-//			logger.error("error creating CMSSignedData object", e);
-//			throw new CryptoException("Error creating CMSSignedData object", e);
-//		}
-	}
-	
-	/**
-	 * Verifies a detached signature, given the data upon which it was originally 
-	 * calculated and the detached signature bytes.
-	 * 
-	 * @param data
-	 *   the data on which the signature was originally calculated.
-	 * @param signature
-	 *   the (detached) signature as a byte array.
-	 * @return
-	 *   whether the verification was successful.
-	 */
-	public boolean verify(byte [] data, byte [] signature) throws CryptoException {
-		try {
-			return verify(new CMSSignedData(new CMSProcessableByteArray(data), signature));
-		} catch (CMSException e) {
-			logger.error("error creating CMSSignedData object", e);
-			throw new CryptoException("Error creating CMSSignedData object", e);
-		}
-	}
-	
-	/**
-	 * Verifies a detached signature, given the array of bytes on which it was 
-	 * originally calculated.
-	 *  
-	 * @param data
-	 * @return
-	 * @throws CryptoException
-	 */
-	private boolean verify(CMSSignedData data) throws CryptoException {
-
-		try {
-			logger.debug("starting CMSSignedData verification ... ");
-			
-			return data.verifySignatures(new SignerInformationVerifierProvider() {
-				
-				private final Logger logger = LoggerFactory.getLogger(SignerInformationVerifierProvider.class);
-				
-				private CMSSignedData data = null;
-				
-				public SignerInformationVerifierProvider setData(CMSSignedData data) {
-					this.data = data;					
-					return this;
-				}			
-	
-				@Override
-				public SignerInformationVerifier get(SignerId sid) throws OperatorCreationException {
-					logger.trace("checking signature by SID: '{}'", sid);
-					@SuppressWarnings("unchecked")
-					Collection<X509CertificateHolder> certificates = (Collection<X509CertificateHolder>)data.getCertificates().getMatches(sid);
-					logger.debug("{} certificates found", certificates.size());
-					try {
-						return new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificates.iterator().next());
-					} catch (CertificateException e) {
-						throw new OperatorCreationException("error creating signer information verifier", e);
-					}
-				}			
-			}.setData(data));
-		} catch(CMSException e) {
-			logger.error("CMS exception verifying signatures", e);
-			throw new CryptoException("CMS exception verifying signatures", e);    		 
-		}
-	}
-
-	/**
-	 * Verifies the contents read from the given input stream are correctly signed.
-	 * 
-	 *  @param
-	 */
-	@Override
-	public boolean verify(InputStream signed) throws CryptoException {
-		boolean result = true;
-		try {
-			CMSSignedDataParser parser = new CMSSignedDataParser(new JcaDigestCalculatorProviderBuilder().setProvider("BC").build(), signed);
-			parser.getSignedContent().drain();
-			Store store = parser.getCertificates();
-		
-			for(Object signer : parser.getSignerInfos().getSigners()) {				
-				for(Object object : store.getMatches(((SignerInformation)signer).getSID())) {					
-					X509CertificateHolder cert = (X509CertificateHolder)object;
-					logger.trace("verifying signer '{}'", cert.getSubject());
-					result = result && ((SignerInformation)signer).verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert));
-					logger.trace("verify returns: {}", result);
-				}
-			}
-			logger.trace("data {} verified", result ? "was" : "was not");
-			return result;
-		} catch (OperatorCreationException | CMSException | IOException | CertificateException e) {
-			throw new CryptoException("error verifying the signature in streaming mode", e);
-		}
-	}	
 }

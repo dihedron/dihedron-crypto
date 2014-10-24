@@ -36,7 +36,6 @@ import org.dihedron.core.os.modules.ImageFileParser;
 import org.dihedron.core.os.modules.ImageParseException;
 import org.dihedron.core.streams.Streams;
 import org.dihedron.core.url.URLFactory;
-import org.dihedron.crypto.CryptoService;
 import org.dihedron.crypto.KeyRing;
 import org.dihedron.crypto.certificates.Certificates;
 import org.dihedron.crypto.certificates.TrustAnchors;
@@ -70,7 +69,7 @@ public class PhysicalTokenAccessTest {
 	/**
 	 * The logger
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(CryptoService.class);
+	private static final Logger logger = LoggerFactory.getLogger(PhysicalTokenAccessTest.class);
 	
 	private static Map<Platform, String[]> paths = new HashMap<>();
 	static {
@@ -166,7 +165,7 @@ public class PhysicalTokenAccessTest {
 	 * @param args
 	 */
 	@Test
-	@Ignore
+//	@Ignore
 	public void testLoadCertificates() throws Exception {
 		
 		String password = new PINDialog("Please enter PIN", "SmartCard model unknown").getPIN();
@@ -177,13 +176,15 @@ public class PhysicalTokenAccessTest {
 				return;
 			}
 			
-			Collection<X509Certificate> trustAnchors = TrustAnchors.fromJavaRootCAs();
-			
+			Collection<X509Certificate> trustAnchors = TrustAnchors.fromJavaRootCAs();			
 			trustAnchors.addAll(TrustAnchors.fromTSL("classpath:org/dihedron/crypto/certificates/tsl/DIGITPA-20141015.xml"));
 //			trustAnchors.addAll(TrustAnchors.fromTSL("https://applicazioni.cnipa.gov.it/TSL/IT_TSL_signed.xml"));
 						
 			for(String alias : keyring.getSignatureKeyAliases()) {
 				logger.info("signature alias: '{}'", alias);
+				
+				SignatureAlgorithm s = SignatureAlgorithm.SHA256_WITH_RSA;
+				
 				X509Certificate certificate = (X509Certificate)keyring.getCertificate(alias);
 				
 				List<X509Certificate> certificates = new ArrayList<>();
@@ -212,7 +213,7 @@ public class PhysicalTokenAccessTest {
 					
 					byte[] data = Arrays.clone(output.toByteArray());
 					logger.trace("cloned byte array has a size of {} bytes", data.length);
-					try(InputStream signed = new ByteArrayInputStream(data); OutputStream fos = new FileOutputStream("tutorial.pdf.p7e")) {
+					try(InputStream signed = new ByteArrayInputStream(data); OutputStream fos = new FileOutputStream("tutorial2.pdf.p7e")) {
 						Streams.copy(signed, fos);
 					}
 					

@@ -44,6 +44,7 @@ import org.bouncycastle.asn1.x509.IssuerSerial;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.dihedron.core.License;
+import org.dihedron.crypto.CryptoService;
 import org.dihedron.crypto.constants.DigestAlgorithm;
 import org.dihedron.crypto.crl.CRL;
 import org.dihedron.crypto.exceptions.CertificateVerificationException;
@@ -63,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * @author Andrea Funto'
  */
 @License(copyright="Copyright (c) 2012-2014 Andrea Funto', Svetlin Nakov")
-public final class Certificates {
+public final class Certificates extends CryptoService {
 	/**
 	 * The logger.
 	 */
@@ -238,7 +239,13 @@ public final class Certificates {
 		} catch (CertPathBuilderException e) {
 			logger.error("error building certification path for " + certificate.getSubjectX500Principal(), e);
 			throw new CertificateVerificationException("Error building certification path: " + certificate.getSubjectX500Principal(), e);
-		} catch (Exception e) {
+//		} catch (Exception e) {
+//			logger.error("error verifying certificate " + certificate.getSubjectX500Principal(), e);
+//			throw new CertificateVerificationException("Error verifying the certificate: " + certificate.getSubjectX500Principal(), e);
+		} catch (CertificateException | NoSuchAlgorithmException | NoSuchProviderException e) {
+			logger.error("error verifying certificate " + certificate.getSubjectX500Principal(), e);
+			throw new CertificateVerificationException("Error verifying the certificate: " + certificate.getSubjectX500Principal(), e);
+		} catch (GeneralSecurityException e) {
 			logger.error("error verifying certificate " + certificate.getSubjectX500Principal(), e);
 			throw new CertificateVerificationException("Error verifying the certificate: " + certificate.getSubjectX500Principal(), e);
 		}
@@ -257,11 +264,14 @@ public final class Certificates {
 	 *   set of intermediate certificates.
 	 * @return 
 	 *   the certification chain (if verification is successful).
-	 * @throws GeneralSecurityException
+	 * @throws InvalidAlgorithmParameterException 
+	 * @throws NoSuchProviderException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws CertPathBuilderException 
 	 *   if the verification is not successful (e.g. certification path cannot 
 	 *   be built or some certificate in the chain is expired).
 	 */
-	private static PKIXCertPathBuilderResult verifyCertificate(X509Certificate certificate, Collection<X509Certificate> trustedRootCerts, Collection<X509Certificate> intermediateCerts) throws GeneralSecurityException {
+	private static PKIXCertPathBuilderResult verifyCertificate(X509Certificate certificate, Collection<X509Certificate> trustedRootCerts, Collection<X509Certificate> intermediateCerts) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, CertPathBuilderException {
 
 		// create the selector that specifies the starting certificate
 		X509CertSelector selector = new X509CertSelector();
