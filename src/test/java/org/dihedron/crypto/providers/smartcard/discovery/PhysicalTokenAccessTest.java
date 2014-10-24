@@ -1,21 +1,6 @@
 /**
- * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved.
- * 
- * This file is part of the Crypto library ("Crypto").
- *
- * Crypto is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU Lesser General Public License as published by the Free 
- * Software Foundation, either version 3 of the License, or (at your option) 
- * any later version.
- *
- * Crypto is distributed in the hope that it will be useful, but WITHOUT ANY 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR 
- * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more 
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License 
- * along with Crypto. If not, see <http://www.gnu.org/licenses/>.
- */
+ * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved. See LICENSE for details.
+ */ 
 package org.dihedron.crypto.providers.smartcard.discovery;
 
 import static org.junit.Assert.assertTrue;
@@ -35,16 +20,18 @@ import java.security.cert.PKIXCertPathBuilderResult;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Arrays;
+import org.dihedron.core.License;
+import org.dihedron.core.os.OperatingSystem;
 import org.dihedron.core.os.Platform;
 import org.dihedron.core.os.files.FileFinder;
 import org.dihedron.core.os.modules.ImageFile;
-import org.dihedron.core.os.modules.ImageFile.Addressing;
 import org.dihedron.core.os.modules.ImageFile.Format;
-import org.dihedron.core.os.modules.ImageFile.OperatingSystem;
 import org.dihedron.core.os.modules.ImageFileParser;
 import org.dihedron.core.os.modules.ImageParseException;
 import org.dihedron.core.streams.Streams;
@@ -77,13 +64,19 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Andrea Funto'
  */
-
+@License
 public class PhysicalTokenAccessTest {
 
 	/**
 	 * The logger
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(CryptoService.class);
+	
+	private static Map<Platform, String[]> paths = new HashMap<>();
+	static {
+		paths.put(Platform.LINUX_32, new String[]{ "/lib/i386-linux-gnu/", "/usr/local/lib/" });
+		paths.put(Platform.LINUX_64, new String[]{ "/lib/x86_64-linux-gnu/", "/usr/local/lib/" });
+	}
 	
 	@Before
 	public void setUp() throws IOException {
@@ -93,15 +86,16 @@ public class PhysicalTokenAccessTest {
 		// otherwise the PKCS#11 support will throw an exception as soon as loaded
 		ImageFileParser parser = null;
 		
-		// ... if only I had lambdas! 
-		switch(Platform.getCurrent()) {
-		case LINUX_32:
+		// ... if only I had lambdas!
+		Platform platform = Platform.getCurrent();
+		switch(platform.getOperatingSystem()) {
+		case LINUX:
 			parser = ImageFileParser.makeParser(Format.ELF);
-			for(File file : FileFinder.findFile("libpcsclite.*", true, new String[]{ "/lib/i386-linux-gnu/", "/usr/local/lib/" })) {
+			for(File file : FileFinder.findFile("libpcsclite.*", true, paths.get(platform))) {
 				try {
 					ImageFile module = parser.parse(file);
 					logger.trace("module: {}", module.toJSON());
-					if(module.getAddressing() == Addressing.SIZE_32 && (module.getOperatingSystem() == OperatingSystem.LINUX || module.getOperatingSystem() == OperatingSystem.SYSTEM_V)) {
+					if(module.getAddressing() == platform.getAddressing() && (module.getOperatingSystem() == OperatingSystem.LINUX || module.getOperatingSystem() == OperatingSystem.SYSTEM_V)) {
 						// make the library accessible to the JVM
 						logger.info("making libpcsclite accessible from file at {}", file.getCanonicalPath());
 						System.setProperty("sun.security.smartcardio.library", file.getCanonicalPath());
@@ -111,28 +105,16 @@ public class PhysicalTokenAccessTest {
 					logger.error("error parsing image at " + file.getCanonicalPath(), e);
 				}
 			}
+			
 			break;
-		case LINUX_64:
-			parser = ImageFileParser.makeParser(Format.ELF);
-			for(File file : FileFinder.findFile("libpcsclite.*", true, new String[]{ "/lib/x86_64-linux-gnu/", "/usr/local/lib/" })) {
-				try {
-					ImageFile module = parser.parse(file);
-					logger.trace("module: {}", module.toJSON());
-					if(module.getAddressing() == Addressing.SIZE_64 && (module.getOperatingSystem() == OperatingSystem.LINUX || module.getOperatingSystem() == OperatingSystem.SYSTEM_V)) {
-						// make the library accessible to the JVM
-						logger.info("making libpcsclite accessible from file at {}", file.getCanonicalPath());
-						System.setProperty("sun.security.smartcardio.library", file.getCanonicalPath());
-						break;
-					}
-				} catch(IOException | ImageParseException e) {
-					logger.error("error parsing image at " + file.getCanonicalPath(), e);
-				}
-			}
+		case MACOSX:
+			// TODO: implement once support is ready
+			logger.warn("unsupported platform");
 			break;
 		default:
-			logger.trace("no need to lookup libpcsclite");
+			logger.trace("no need to lookup libpcsclite");			
 			break;
-		}		
+		}
 	}
 	
 	@Test

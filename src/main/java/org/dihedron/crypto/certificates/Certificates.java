@@ -1,21 +1,6 @@
 /**
- * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved.
- * 
- * This file is part of the Crypto library ("Crypto").
- *
- * Crypto is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU Lesser General Public License as published by the Free 
- * Software Foundation, either version 3 of the License, or (at your option) 
- * any later version.
- *
- * Crypto is distributed in the hope that it will be useful, but WITHOUT ANY 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR 
- * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more 
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License 
- * along with Crypto. If not, see <http://www.gnu.org/licenses/>.
- */
+ * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved. See LICENSE for details.
+ */ 
 package org.dihedron.crypto.certificates;
 
 import java.io.ByteArrayInputStream;
@@ -58,6 +43,7 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.IssuerSerial;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
+import org.dihedron.core.License;
 import org.dihedron.crypto.constants.DigestAlgorithm;
 import org.dihedron.crypto.crl.CRL;
 import org.dihedron.crypto.exceptions.CertificateVerificationException;
@@ -76,6 +62,7 @@ import org.slf4j.LoggerFactory;
  * @author Svetlin Nakov
  * @author Andrea Funto'
  */
+@License(copyright="Copyright (c) 2012-2014 Andrea Funto', Svetlin Nakov")
 public final class Certificates {
 	/**
 	 * The logger.

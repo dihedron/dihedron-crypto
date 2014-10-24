@@ -1,4 +1,9 @@
+/**
+ * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved. See LICENSE for details.
+ */ 
 package org.dihedron.crypto.exceptions;
+
+import org.dihedron.core.License;
 
 
 /**
@@ -8,6 +13,8 @@ package org.dihedron.crypto.exceptions;
  * @author Andrea Funto'
  * @author Svetlin Nakov
  */
+
+@License(copyright="Copyright (c) 2012-2014, Andrea Funto, Svetlin Nakov") 
 public class CertificateVerificationException extends CertificateException {
 
 	/**

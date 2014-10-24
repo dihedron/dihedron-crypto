@@ -1,21 +1,6 @@
 /**
- * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved.
- * 
- * This file is part of the Crypto library ("Crypto").
- *
- * Crypto is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU Lesser General Public License as published by the Free 
- * Software Foundation, either version 3 of the License, or (at your option) 
- * any later version.
- *
- * Crypto is distributed in the hope that it will be useful, but WITHOUT ANY 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR 
- * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more 
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License 
- * along with Crypto. If not, see <http://www.gnu.org/licenses/>.
- */
+ * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved. See LICENSE for details.
+ */ 
 package org.dihedron.crypto.certificates;
 
 import java.io.FileInputStream;
@@ -39,6 +24,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.dihedron.core.License;
 import org.dihedron.core.url.URLFactory;
 import org.dihedron.core.variables.SystemPropertyValueProvider;
 import org.dihedron.core.variables.Variables;
@@ -55,6 +41,7 @@ import org.xml.sax.SAXException;
 /**
  * @author Andrea Funto'
  */
+@License
 public final class TrustAnchors {
 	
 	/**
@@ -121,6 +108,14 @@ public final class TrustAnchors {
 	    }
 	}
 	
+	/**
+	 * Attempts to load the certificates of a set of trust anchors from a TSL; if 
+	 * anything fails, returns an empty list of certificates.    
+	 * 
+	 * @param tslURL
+	 * @return
+	 * @throws MalformedURLException
+	 */
 	public static List<X509Certificate> fromTSL(String tslURL) throws MalformedURLException {
 		List<X509Certificate> trustAnchors = new ArrayList<>();
 		
@@ -149,8 +144,10 @@ public final class TrustAnchors {
 			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			logger.error("error acquiring TSL from '" + tslURL + "'", e);
+			trustAnchors = null;
 		} catch (CertificateLoaderException e) {
 			logger.error("error initialising certificate loader", e);
+			trustAnchors = null;
 		}
 		
 		return trustAnchors;

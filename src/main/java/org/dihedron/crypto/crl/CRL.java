@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved. See LICENSE for details.
+ */ 
 package org.dihedron.crypto.crl;
 
 import java.io.ByteArrayInputStream;
@@ -31,6 +34,7 @@ import org.bouncycastle.asn1.x509.DistributionPointName;
 import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
+import org.dihedron.core.License;
 import org.dihedron.crypto.exceptions.CertificateVerificationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +48,7 @@ import org.slf4j.LoggerFactory;
  * @author Svetlin Nakov
  * @author Andrea Funto'
  */
+@License(copyright="Copyright (c) 2012-2014 Andrea Funto', Svetlin Nakov")
 public class CRL {
 	
 	/**

@@ -1,20 +1,21 @@
 /**
- * 
- */
+ * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved. See LICENSE for details.
+ */ 
 package org.dihedron.crypto.providers.smartcard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.Provider;
 
+import org.dihedron.core.License;
 import org.dihedron.crypto.providers.AutoCloseableProvider;
-import org.dihedron.crypto.providers.smartcard.SmartCardTraits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Andrea Funto'
  */
+@License
 public class SmartCardProvider extends AutoCloseableProvider {
 
 	/**

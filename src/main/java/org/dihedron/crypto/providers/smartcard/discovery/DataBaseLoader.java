@@ -1,25 +1,8 @@
 /**
- * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved.
- * 
- * This file is part of the Crypto library ("Crypto").
- *
- * Crypto is free software: you can redistribute it and/or modify it under 
- * the terms of the GNU Lesser General Public License as published by the Free 
- * Software Foundation, either version 3 of the License, or (at your option) 
- * any later version.
- *
- * Crypto is distributed in the hope that it will be useful, but WITHOUT ANY 
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR 
- * A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more 
- * details.
- *
- * You should have received a copy of the GNU Lesser General Public License 
- * along with Crypto. If not, see <http://www.gnu.org/licenses/>.
- */
+ * Copyright (c) 2012-2014, Andrea Funto'. All rights reserved. See LICENSE for details.
+ */ 
 
 package org.dihedron.crypto.providers.smartcard.discovery;
-
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,10 +11,12 @@ import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
+import org.dihedron.core.License;
 import org.dihedron.core.url.URLFactory;
 import org.dihedron.core.xml.DOM;
 import org.dihedron.crypto.exceptions.SmartCardException;
@@ -49,6 +34,7 @@ import org.xml.sax.SAXParseException;
  * 
  * @author Andrea Funto'
  */
+@License
 public final class DataBaseLoader {
 	
 	/**
@@ -220,9 +206,18 @@ public final class DataBaseLoader {
 			}
 			logger.info("database loaded");
 			return database;
-		} catch (Exception e) {
+		} catch(SAXParseException e) {
 			logger.error("error parsing input XML database", e);
 			throw new SmartCardException("Error parsing input XML database", e);
+		} catch (SAXException e) {
+			logger.error("error verifying schema of input XML database", e);
+			throw new SmartCardException("Error verifying schema of input XML database", e);
+		} catch (IOException e) {
+			logger.error("error reading data stream for input XML database", e);
+			throw new SmartCardException("Error reading data stream for input XML database", e);
+		} catch (ParserConfigurationException e) {
+			logger.error("error configuring SAX parser for input XML database", e);
+			throw new SmartCardException("Error configuring SAX parser for input XML database", e);
 		}
 	}
 }
