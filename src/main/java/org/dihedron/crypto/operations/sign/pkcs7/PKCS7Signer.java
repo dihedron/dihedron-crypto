@@ -13,29 +13,18 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.CMSProcessableByteArray;
-import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.cms.CMSSignedDataParser;
 import org.bouncycastle.cms.CMSSignedDataStreamGenerator;
-import org.bouncycastle.cms.SignerId;
 import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.SignerInfoGeneratorBuilder;
-import org.bouncycastle.cms.SignerInformation;
-import org.bouncycastle.cms.SignerInformationVerifier;
-import org.bouncycastle.cms.SignerInformationVerifierProvider;
-import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.DigestCalculatorProvider;
 import org.bouncycastle.operator.OperatorCreationException;
@@ -62,16 +51,6 @@ public class PKCS7Signer extends Signer {
 	 * The logger.
 	 */
 	private static Logger logger = LoggerFactory.getLogger(PKCS7Signer.class);
-	
-//	/**
-//	 * The digest and encryption algorithm combination used to create the signature.
-//	 */
-//	private SignatureAlgorithm algorithm;
-	
-//	/**
-//	 * A BouncyCastle to create signature data.
-//	 */
-//	private SignerInfoGenerator signerInfoGenerator = null;
 	
 	/**
 	 * The underlying BouncyCastle stream data signer.

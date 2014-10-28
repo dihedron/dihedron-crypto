@@ -42,7 +42,7 @@ import org.dihedron.crypto.constants.SignatureAlgorithm;
 import org.dihedron.crypto.exceptions.CertificateVerificationException;
 import org.dihedron.crypto.exceptions.ProviderException;
 import org.dihedron.crypto.exceptions.UnavailableDriverException;
-import org.dihedron.crypto.operations.SignatureFormat;
+import org.dihedron.crypto.operations.EnvelopeFormat;
 import org.dihedron.crypto.operations.sign.Signer;
 import org.dihedron.crypto.operations.sign.SignerFactory;
 import org.dihedron.crypto.operations.verify.Verifier;
@@ -206,26 +206,14 @@ public class PhysicalTokenAccessTest {
 				// dump verified certificate
 				logger.info("public key:\n{}", verified.getPublicKey());
 				
-				Signer signer = SignerFactory.makeSigner(SignatureFormat.PKCS7, alias, keyring, provider, SignatureAlgorithm.SHA256_WITH_RSA);
-				Verifier verifier = VerifierFactory.makeVerifier(SignatureFormat.PKCS7);
+				Signer signer = SignerFactory.makeSigner(EnvelopeFormat.PKCS7, alias, keyring, provider, SignatureAlgorithm.SHA256_WITH_RSA);
+				Verifier verifier = VerifierFactory.makeVerifier(EnvelopeFormat.PKCS7);
 				try(InputStream input = URLFactory.makeURL("classpath:org/dihedron/crypto/data/tutorial.pdf").openStream(); ByteArrayOutputStream output = new ByteArrayOutputStream()) {
 					signer.sign(input, output);
 					
 					logger.trace("written {} bytes to (signed output) output buffer", output.size());
 					
-					byte[] data = Arrays.clone(output.toByteArray());
-					logger.trace("cloned byte array has a size of {} bytes", data.length);
-					try(InputStream signed = new ByteArrayInputStream(data); OutputStream fos = new FileOutputStream("tutorial2.pdf.p7e")) {
-						Streams.copy(signed, fos);
-					}
-					
-					try(InputStream signed = new ByteArrayInputStream(data)) {
-						if(verifier.verify(signed)) {
-							logger.info("data verified");
-						} else {
-							logger.error("error verifying data");
-						}
-					}
+					assertTrue(verifier.verify(output.toByteArray()));
 				}
 			}
 		} catch(CertificateVerificationException e) {

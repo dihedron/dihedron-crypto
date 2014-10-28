@@ -11,7 +11,7 @@ import org.dihedron.crypto.KeyRing;
 import org.dihedron.crypto.constants.SignatureAlgorithm;
 import org.dihedron.crypto.exceptions.CryptoException;
 import org.dihedron.crypto.exceptions.UnsupportedFormatException;
-import org.dihedron.crypto.operations.SignatureFormat;
+import org.dihedron.crypto.operations.EnvelopeFormat;
 import org.dihedron.crypto.operations.sign.pkcs7.PKCS7Signer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class SignerFactory {
 	 *   A Signer object.
 	 * @throws CryptoException
 	 */
-	public static Signer makeSigner(SignatureFormat format, String alias, KeyRing keyring, Provider provider, SignatureAlgorithm algorithm) throws CryptoException {
+	public static Signer makeSigner(EnvelopeFormat format, String alias, KeyRing keyring, Provider provider, SignatureAlgorithm algorithm) throws CryptoException {
 		
 		Signer signer = null;
 		

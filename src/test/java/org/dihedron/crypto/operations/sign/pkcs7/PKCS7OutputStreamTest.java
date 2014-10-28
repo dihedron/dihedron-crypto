@@ -3,13 +3,13 @@
  */
 package org.dihedron.crypto.operations.sign.pkcs7;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -19,15 +19,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.Arrays;
 import org.dihedron.core.License;
 import org.dihedron.core.os.OperatingSystem;
 import org.dihedron.core.os.Platform;
 import org.dihedron.core.os.files.FileFinder;
 import org.dihedron.core.os.modules.ImageFile;
+import org.dihedron.core.os.modules.ImageFile.Format;
 import org.dihedron.core.os.modules.ImageFileParser;
 import org.dihedron.core.os.modules.ImageParseException;
-import org.dihedron.core.os.modules.ImageFile.Format;
 import org.dihedron.core.streams.Streams;
 import org.dihedron.core.url.URLFactory;
 import org.dihedron.crypto.KeyRing;
@@ -36,8 +35,11 @@ import org.dihedron.crypto.constants.SignatureAlgorithm;
 import org.dihedron.crypto.exceptions.CertificateVerificationException;
 import org.dihedron.crypto.exceptions.ProviderException;
 import org.dihedron.crypto.exceptions.UnavailableDriverException;
+import org.dihedron.crypto.operations.EnvelopeFormat;
 import org.dihedron.crypto.operations.sign.SigningStream;
 import org.dihedron.crypto.operations.sign.SigningStreamConfigurator;
+import org.dihedron.crypto.operations.verify.Verifier;
+import org.dihedron.crypto.operations.verify.VerifierFactory;
 import org.dihedron.crypto.providers.AutoCloseableProvider;
 import org.dihedron.crypto.providers.smartcard.SmartCardKeyRing;
 import org.dihedron.crypto.providers.smartcard.SmartCardProviderFactory;
@@ -104,7 +106,7 @@ public class PKCS7OutputStreamTest {
 	}
 	
 	@Test
-	public void testWrite() throws Exception {
+	public void testSignAndVerify() throws Exception {
 		String password = new PINDialog("Please enter PIN", "SmartCard model unknown").getPIN();
 		
 		//
@@ -151,21 +153,10 @@ public class PKCS7OutputStreamTest {
 					
 					logger.trace("written {} bytes to (signed output) output buffer", output.size());
 					
-					byte[] data = Arrays.clone(output.toByteArray());
-					logger.trace("cloned byte array has a size of {} bytes", data.length);
-					try(InputStream signed = new ByteArrayInputStream(data); OutputStream fos = new FileOutputStream("tutorial_streaming.pdf.p7e")) {
-						Streams.copy(signed, fos);
-						
+					Verifier verifier = VerifierFactory.makeVerifier(EnvelopeFormat.PKCS7);
+					try(ByteArrayInputStream bais = new ByteArrayInputStream(output.toByteArray())) {
+						assertTrue(verifier.verify(bais));
 					}
-					
-//					try(InputStream signed = new ByteArrayInputStream(data)) {
-//						if(signer.verify(signed)) {
-//							logger.info("data verified");
-//						} else {
-//							logger.error("error verifying data");
-//						}
-//					}
-					
 				}
 				
 			}

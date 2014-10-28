@@ -7,7 +7,7 @@ package org.dihedron.crypto.operations.verify;
 import org.dihedron.core.License;
 import org.dihedron.crypto.exceptions.CryptoException;
 import org.dihedron.crypto.exceptions.UnsupportedFormatException;
-import org.dihedron.crypto.operations.SignatureFormat;
+import org.dihedron.crypto.operations.EnvelopeFormat;
 import org.dihedron.crypto.operations.verify.pkcs7.PKCS7Verifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class VerifierFactory {
 	 *   A Verifier object.
 	 * @throws CryptoException
 	 */
-	public static Verifier makeVerifier(SignatureFormat format) throws CryptoException {
+	public static Verifier makeVerifier(EnvelopeFormat format) throws CryptoException {
 		
 		Verifier verifier = null;
 		

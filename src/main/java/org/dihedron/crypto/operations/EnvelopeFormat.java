@@ -9,19 +9,19 @@ package org.dihedron.crypto.operations;
  * 
  * @author Andrea Funto'
  */
-public enum SignatureFormat {
+public enum EnvelopeFormat {
 	/**
-	 * A verifier that provides PKCS#7/CMS signatures.
+	 * The PKCS#7/CMS envelope format.
 	 */
 	PKCS7,
 	
 	/**
-	 * A verifier that provides PDF digital signatures.
+	 * The PDF digital signature format.
 	 */
 	PDF,
 	
 	/**
-	 * A verifier that provides XML signatures.
+	 * The XML signature format.
 	 */
 	XML
 }

@@ -36,9 +36,9 @@ public class PDFVerifier extends Verifier {
 	
 	private KeyRing keyring;
 	
-	private Key key = null;
+//	private Key key = null;
 	
-	private Certificate[] chain = null; 
+//	private Certificate[] chain = null; 
 	
 	/**
 	 * Constructor.
@@ -47,10 +47,10 @@ public class PDFVerifier extends Verifier {
 	public PDFVerifier(String alias, KeyRing keyring, Provider provider) throws CryptoException {
 		this.keyring = keyring;
 		
-		// retrieve key and certificate
-		key = keyring.getPrivateKey(alias);
-		//certificate = accessor.getCertificate(alias);		
-		chain = keyring.getCertificateChainAsArray(alias);
+//		// retrieve key and certificate
+//		key = keyring.getPrivateKey(alias);
+//		//certificate = accessor.getCertificate(alias);		
+//		chain = keyring.getCertificateChainAsArray(alias);
 		
 		logger.trace("PdfSigner initialised");
 	} 
