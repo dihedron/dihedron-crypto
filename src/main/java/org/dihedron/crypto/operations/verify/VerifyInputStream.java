@@ -3,24 +3,35 @@
  */ 
 package org.dihedron.crypto.operations.verify;
 
+import java.io.FilterInputStream;
+import java.io.InputStream;
+
 import org.dihedron.core.License;
 
 /**
+ * Creates a wrapper around an input stream that verifies whether the input data 
+ * has a valid signature as it reads it in.
+ * 
  * @author Andrea Funto'
  */
 @License
-public interface VerifyInputStream {
+public abstract class VerifyInputStream extends FilterInputStream {
 
-	boolean isVerified();
+	/**
+	 * Constructor.
+	 * 
+	 * @param input
+	 *   the wrapped input stream.
+	 */
+	public VerifyInputStream(InputStream input) {
+		super(input);
+	}
 	
-//	/**
-//	 * Verifies the signature of the given set of encapsulated data.
-//	 * 
-//	 * @param signed
-//	 *   the encapsulated data.
-//	 * @return
-//	 *   whether the signature is valid.
-//	 * @throws CryptoException
-//	 */
-//	public abstract boolean verify(InputStream signed) throws CryptoException;
+	/**
+	 * Returns whether the signed data verification was successful.
+	 *  
+	 * @return
+	 *   whether the signed data verification was successful.
+	 */
+	public abstract boolean isVerified();
 }

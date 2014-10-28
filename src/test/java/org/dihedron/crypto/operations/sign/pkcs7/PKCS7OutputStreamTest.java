@@ -36,8 +36,8 @@ import org.dihedron.crypto.constants.SignatureAlgorithm;
 import org.dihedron.crypto.exceptions.CertificateVerificationException;
 import org.dihedron.crypto.exceptions.ProviderException;
 import org.dihedron.crypto.exceptions.UnavailableDriverException;
-import org.dihedron.crypto.operations.sign.SignerOutputStream;
-import org.dihedron.crypto.operations.sign.SignerOutputStreamConfigurator;
+import org.dihedron.crypto.operations.sign.SigningStream;
+import org.dihedron.crypto.operations.sign.SigningStreamConfigurator;
 import org.dihedron.crypto.providers.AutoCloseableProvider;
 import org.dihedron.crypto.providers.smartcard.SmartCardKeyRing;
 import org.dihedron.crypto.providers.smartcard.SmartCardProviderFactory;
@@ -126,7 +126,7 @@ public class PKCS7OutputStreamTest {
 			for(String alias : keyring.getSignatureKeyAliases()) {
 				logger.info("signature alias: '{}'", alias);
 				
-				SignerOutputStreamConfigurator configurator = new SignerOutputStreamConfigurator();
+				SigningStreamConfigurator configurator = new SigningStreamConfigurator();
 				configurator					
 					.setAlias(alias)
 					.setAlgorithm(SignatureAlgorithm.SHA256_WITH_RSA)
@@ -138,7 +138,7 @@ public class PKCS7OutputStreamTest {
 								
 				try (	InputStream input = URLFactory.makeURL("classpath:org/dihedron/crypto/data/tutorial.pdf").openStream(); 
 						ByteArrayOutputStream output = new ByteArrayOutputStream(); 
-						SignerOutputStream signer = new PKCS7OutputStream(output, configurator)) {
+						SigningStream signer = new PKCS7SigningStream(output, configurator)) {
 					
 					Streams.copy(input, signer);
 					signer.flush();

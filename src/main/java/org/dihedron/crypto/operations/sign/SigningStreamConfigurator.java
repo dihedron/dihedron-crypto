@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @License
-public class SignerOutputStreamConfigurator {
+public class SigningStreamConfigurator {
 	
 	/**
 	 * Whether by default data should be encapsulated along with the signature.
@@ -38,7 +38,7 @@ public class SignerOutputStreamConfigurator {
 	/**
 	 * The logger.
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(SignerOutputStreamConfigurator.class);
+	private static final Logger logger = LoggerFactory.getLogger(SigningStreamConfigurator.class);
 	
 	/**
 	 * The digest and encryption algorithm combination used to create the signature.
@@ -79,7 +79,7 @@ public class SignerOutputStreamConfigurator {
 	/**
 	 * Default constructor.
 	 */
-	public SignerOutputStreamConfigurator() {		
+	public SigningStreamConfigurator() {		
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class SignerOutputStreamConfigurator {
 	 * @return
 	 *   the object itself, for method chaining.
 	 */
-	public SignerOutputStreamConfigurator setAlgorithm(SignatureAlgorithm algorithm) {
+	public SigningStreamConfigurator setAlgorithm(SignatureAlgorithm algorithm) {
 		this.algorithm = algorithm;
 		return this;
 	}
@@ -123,7 +123,7 @@ public class SignerOutputStreamConfigurator {
  	 * @return
 	 *   the object itself, for method chaining.
 	 */
-	public SignerOutputStreamConfigurator setAlias(String alias) {
+	public SigningStreamConfigurator setAlias(String alias) {
 		this.alias = alias;
 		return this;
 	}
@@ -146,7 +146,7 @@ public class SignerOutputStreamConfigurator {
 	 * @return
 	 *   the object itself, for chaining.
 	 */
-	public SignerOutputStreamConfigurator setKeyRing(KeyRing keyring) {
+	public SigningStreamConfigurator setKeyRing(KeyRing keyring) {
 		this.keyring = keyring;
 		return this;
 	}
@@ -169,7 +169,7 @@ public class SignerOutputStreamConfigurator {
 	 * @return  
 	 *   the object itself, for method chaining.
 	 */
-	public SignerOutputStreamConfigurator setProvider(Provider provider) {
+	public SigningStreamConfigurator setProvider(Provider provider) {
 		this.provider = provider;
 		return this;
 	}
@@ -193,7 +193,7 @@ public class SignerOutputStreamConfigurator {
 	 * @return
 	 *   the object itself, for method chaining.
 	 */
-	public SignerOutputStreamConfigurator setEncapsulateData(boolean encapsulateData) {
+	public SigningStreamConfigurator setEncapsulateData(boolean encapsulateData) {
 		this.encapsulateData = encapsulateData;
 		return this;
 	}
@@ -216,7 +216,7 @@ public class SignerOutputStreamConfigurator {
 	 * @return
 	 *   the object itself, for method chaining.
 	 */
-	public SignerOutputStreamConfigurator setVerifyCertificate(boolean verifyCertificate) {
+	public SigningStreamConfigurator setVerifyCertificate(boolean verifyCertificate) {
 		this.verifyCertificate = verifyCertificate;
 		return this;
 	}
@@ -240,7 +240,7 @@ public class SignerOutputStreamConfigurator {
 	 * @return 
 	 *   the object itself, for method chaining.
 	 */
-	public SignerOutputStreamConfigurator addTrustAnchor(Certificate trustAnchor) {
+	public SigningStreamConfigurator addTrustAnchor(Certificate trustAnchor) {
 		if(trustAnchor != null && trustAnchor instanceof X509Certificate) {
 			this.trustAnchors.add((X509Certificate)trustAnchor);
 		}
@@ -256,7 +256,7 @@ public class SignerOutputStreamConfigurator {
 	 * @return 
 	 *   the object itself, for method chaining.
 	 */
-	public SignerOutputStreamConfigurator addTrustAnchors(Collection<X509Certificate> trustAnchors) {
+	public SigningStreamConfigurator addTrustAnchors(Collection<X509Certificate> trustAnchors) {
 		if(trustAnchors != null) {
 			this.trustAnchors.addAll(trustAnchors);
 		}
@@ -270,7 +270,7 @@ public class SignerOutputStreamConfigurator {
 	 * @return 
 	 *   the object itself, for method chaining.
 	 */
-	public SignerOutputStreamConfigurator clearTrustAnchors() {
+	public SigningStreamConfigurator clearTrustAnchors() {
 		trustAnchors.clear();
 		return this;
 	}

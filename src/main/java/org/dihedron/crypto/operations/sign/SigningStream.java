@@ -15,17 +15,17 @@ import org.slf4j.LoggerFactory;
  * @author Andrea Funto'
  */
 @License
-public abstract class SignerOutputStream extends FilterOutputStream {
+public abstract class SigningStream extends FilterOutputStream {
 	
 	/**
 	 * The logger.
 	 */
-	private static Logger logger = LoggerFactory.getLogger(SignerOutputStream.class);
+	private static Logger logger = LoggerFactory.getLogger(SigningStream.class);
 
 	/**
 	 * The signing stream configurator.
 	 */
-	protected SignerOutputStreamConfigurator configurator;
+	protected SigningStreamConfigurator configurator;
 	
 	/**
 	 * Constructor.
@@ -38,7 +38,7 @@ public abstract class SignerOutputStream extends FilterOutputStream {
 	 * @throws CryptoException
 	 *   if any of the input parameters is null.
 	 */
-	public SignerOutputStream(OutputStream output, SignerOutputStreamConfigurator configurator) throws CryptoException {
+	public SigningStream(OutputStream output, SigningStreamConfigurator configurator) throws CryptoException {
 		super(output);
 		if(output == null || configurator == null) {
 			logger.error("input parameters must not be null");

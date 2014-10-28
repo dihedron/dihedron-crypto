@@ -31,7 +31,6 @@ import org.dihedron.core.os.OperatingSystem;
 import org.dihedron.core.os.Platform;
 import org.dihedron.core.os.files.FileFinder;
 import org.dihedron.core.os.modules.ImageFile;
-import org.dihedron.core.os.modules.ImageFile.Format;
 import org.dihedron.core.os.modules.ImageFileParser;
 import org.dihedron.core.os.modules.ImageParseException;
 import org.dihedron.core.streams.Streams;
@@ -43,9 +42,11 @@ import org.dihedron.crypto.constants.SignatureAlgorithm;
 import org.dihedron.crypto.exceptions.CertificateVerificationException;
 import org.dihedron.crypto.exceptions.ProviderException;
 import org.dihedron.crypto.exceptions.UnavailableDriverException;
+import org.dihedron.crypto.operations.SignatureFormat;
 import org.dihedron.crypto.operations.sign.Signer;
 import org.dihedron.crypto.operations.sign.SignerFactory;
-import org.dihedron.crypto.operations.sign.SignerFactory.Type;
+import org.dihedron.crypto.operations.verify.Verifier;
+import org.dihedron.crypto.operations.verify.VerifierFactory;
 import org.dihedron.crypto.providers.AutoCloseableProvider;
 import org.dihedron.crypto.providers.smartcard.SmartCardKeyRing;
 import org.dihedron.crypto.providers.smartcard.SmartCardProviderFactory;
@@ -89,7 +90,7 @@ public class PhysicalTokenAccessTest {
 		Platform platform = Platform.getCurrent();
 		switch(platform.getOperatingSystem()) {
 		case LINUX:
-			parser = ImageFileParser.makeParser(Format.ELF);
+			parser = ImageFileParser.makeParser(ImageFile.Format.ELF);
 			for(File file : FileFinder.findFile("libpcsclite.*", true, paths.get(platform))) {
 				try {
 					ImageFile module = parser.parse(file);
@@ -205,7 +206,8 @@ public class PhysicalTokenAccessTest {
 				// dump verified certificate
 				logger.info("public key:\n{}", verified.getPublicKey());
 				
-				Signer signer = SignerFactory.makeSigner(Type.PKCS7, alias, keyring, provider, SignatureAlgorithm.SHA256_WITH_RSA);				
+				Signer signer = SignerFactory.makeSigner(SignatureFormat.PKCS7, alias, keyring, provider, SignatureAlgorithm.SHA256_WITH_RSA);
+				Verifier verifier = VerifierFactory.makeVerifier(SignatureFormat.PKCS7);
 				try(InputStream input = URLFactory.makeURL("classpath:org/dihedron/crypto/data/tutorial.pdf").openStream(); ByteArrayOutputStream output = new ByteArrayOutputStream()) {
 					signer.sign(input, output);
 					
@@ -218,7 +220,7 @@ public class PhysicalTokenAccessTest {
 					}
 					
 					try(InputStream signed = new ByteArrayInputStream(data)) {
-						if(signer.verify(signed)) {
+						if(verifier.verify(signed)) {
 							logger.info("data verified");
 						} else {
 							logger.error("error verifying data");

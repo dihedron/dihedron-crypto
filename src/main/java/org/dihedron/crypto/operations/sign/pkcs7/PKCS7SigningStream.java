@@ -29,8 +29,8 @@ import org.bouncycastle.util.Store;
 import org.dihedron.core.License;
 import org.dihedron.crypto.constants.SignatureAlgorithm;
 import org.dihedron.crypto.exceptions.CryptoException;
-import org.dihedron.crypto.operations.sign.SignerOutputStream;
-import org.dihedron.crypto.operations.sign.SignerOutputStreamConfigurator;
+import org.dihedron.crypto.operations.sign.SigningStream;
+import org.dihedron.crypto.operations.sign.SigningStreamConfigurator;
 import org.dihedron.crypto.providers.AutoCloseableProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,12 +39,12 @@ import org.slf4j.LoggerFactory;
  * @author Andrea Funto'
  */
 @License
-public class PKCS7OutputStream extends SignerOutputStream {
+public class PKCS7SigningStream extends SigningStream {
 	
 	/**
 	 * The logger.
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(PKCS7OutputStream.class);
+	private static final Logger logger = LoggerFactory.getLogger(PKCS7SigningStream.class);
 	
 	/**
 	 * The underlying BouncyCastle stream data signer.
@@ -66,10 +66,10 @@ public class PKCS7OutputStream extends SignerOutputStream {
 	 * @throws CryptoException
 	 *   if any of the input parameters is null.
 	 */
-	public PKCS7OutputStream(OutputStream output, SignerOutputStreamConfigurator configurator) throws CryptoException {
+	public PKCS7SigningStream(OutputStream output, SigningStreamConfigurator configurator) throws CryptoException {
 		super(output, configurator);
 		
-		logger.info("creating PKCS#7 signer with '{}' signature algorithm, using certificate alias '{}'", configurator.getAlgorithm(), configurator.getAlias());
+		logger.info("creating PKCS#7 signing filter output stream with '{}' signature algorithm, using certificate alias '{}'", configurator.getAlgorithm(), configurator.getAlias());
 		
 		try {
 			logger.info("signing with alias '{}'", configurator.getAlias());
