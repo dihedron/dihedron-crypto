@@ -51,6 +51,7 @@ import org.dihedron.crypto.providers.smartcard.discovery.Readers;
 import org.dihedron.crypto.providers.smartcard.discovery.SmartCard;
 import org.dihedron.crypto.ui.PINDialog;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +107,7 @@ public class PKCS7OutputStreamTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testSignAndVerify() throws Exception {
 		String password = new PINDialog("Please enter PIN", "SmartCard model unknown").getPIN();
 		

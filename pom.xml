@@ -96,7 +96,18 @@
 				<configuration>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
-					</archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<Codebase>*</Codebase>
+							<Permissions>all-permissions</Permissions>
+							<!-- 
+							<Trusted-Library>true</Trusted-Library>
+							-->
+							<Application-Name>Dihedron - Common Cryptographic Utilities</Application-Name>
+						</manifestEntries>
+					</archive>					
 				</configuration>
 			</plugin>		
 			

@@ -166,7 +166,7 @@ public class PhysicalTokenAccessTest {
 	 * @param args
 	 */
 	@Test
-//	@Ignore
+	@Ignore
 	public void testLoadCertificates() throws Exception {
 		
 		String password = new PINDialog("Please enter PIN", "SmartCard model unknown").getPIN();
