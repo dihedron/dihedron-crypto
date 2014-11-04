@@ -12,7 +12,7 @@ import org.dihedron.core.library.Traits;
  * @author Andrea Funto'
  */
 @License
-public class CryptoLibrary extends Library {
+public class Crypto extends Library {
 		
 	/**
 	 * Returns the value of the give trait.
@@ -23,9 +23,9 @@ public class CryptoLibrary extends Library {
 	 *   the value of the trait.
 	 */
 	public static String valueOf(Traits trait) {
-		synchronized(CryptoLibrary.class) {
+		synchronized(Crypto.class) {
 			if(singleton == null) {
-				singleton = new CryptoLibrary();
+				singleton = new Crypto();
 			}}
 		return singleton.get(trait);
 	}
@@ -38,12 +38,12 @@ public class CryptoLibrary extends Library {
 	/**
 	 * The single instance.
 	 */
-	private static CryptoLibrary singleton = new CryptoLibrary();
+	private static Crypto singleton = new Crypto();
 
 	/**
 	 * Constructor.
 	 */
-	private CryptoLibrary() {
+	private Crypto() {
 		super(LIBRARY_NAME);
 	}
 }

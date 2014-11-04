@@ -16,7 +16,7 @@ import java.security.cert.Certificate;
 import org.dihedron.core.License;
 import org.dihedron.core.library.Traits;
 import org.dihedron.core.streams.Streams;
-import org.dihedron.crypto.CryptoLibrary;
+import org.dihedron.crypto.Crypto;
 import org.dihedron.crypto.KeyRing;
 import org.dihedron.crypto.exceptions.CryptoException;
 import org.dihedron.crypto.operations.sign.Signer;
@@ -130,7 +130,7 @@ public class PDFSigner extends Signer {
 			PdfStamper stamper = PdfStamper.createSignature(reader, output, '\0');
 			PdfSignatureAppearance appearance = stamper.getSignatureAppearance();
 			//appearance.setVisibleSignature("mySig");
-			appearance.setReason("Signed with Dihedron WebSign - Digital Signature for the Web ver. " + CryptoLibrary.valueOf(Traits.VERSION));
+			appearance.setReason("Signed with Dihedron WebSign - Digital Signature for the Web ver. " + Crypto.valueOf(Traits.VERSION));
 			appearance.setLocation("Hidden Signature");
 			 
 			appearance.setCrypto((PrivateKey)key, chain, null, PdfSignatureAppearance.WINCER_SIGNED);
