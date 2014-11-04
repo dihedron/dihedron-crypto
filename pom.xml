@@ -10,7 +10,7 @@
 	
 	<groupId>org.dihedron.crypto</groupId>
 	<artifactId>dihedron-crypto</artifactId>
-	<version>1.0.0.RC1</version>
+	<version>1.0.0.RC2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Cryptographic Support Classes</name>
 				
