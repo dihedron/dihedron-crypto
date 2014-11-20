@@ -4,6 +4,7 @@
 
 package org.dihedron.crypto.providers.smartcard.discovery;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -17,6 +18,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.SchemaFactory;
 
 import org.dihedron.core.License;
+import org.dihedron.core.streams.MirrorInputStream;
 import org.dihedron.core.url.URLFactory;
 import org.dihedron.core.xml.DOM;
 import org.dihedron.crypto.exceptions.SmartCardException;
@@ -167,7 +169,7 @@ public final class DataBaseLoader {
 			logger.warn("invalid input stream");
 			return null;
 		}
-		try (InputStream stream = input; InputStream xsd = URLFactory.makeURL(SMARTCARDS_XSD).openStream()){
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); MirrorInputStream stream = new MirrorInputStream(input, baos, true); InputStream xsd = URLFactory.makeURL(SMARTCARDS_XSD).openStream()){
 		
 			DataBase database = new DataBase();
 			
@@ -204,7 +206,7 @@ public final class DataBaseLoader {
 				}				
 				database.put(atr, smartcard);
 			}
-			logger.info("database loaded");
+			logger.info("database loaded from\n{}", new String(baos.toByteArray()));
 			return database;
 		} catch(SAXParseException e) {
 			logger.error("error parsing input XML database", e);
