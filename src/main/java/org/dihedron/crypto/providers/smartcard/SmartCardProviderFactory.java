@@ -13,7 +13,6 @@ import java.security.Provider;
 
 import org.dihedron.core.License;
 import org.dihedron.core.os.Platform;
-import org.dihedron.crypto.exceptions.ProviderException;
 import org.dihedron.crypto.exceptions.SmartCardException;
 import org.dihedron.crypto.exceptions.UnavailableDriverException;
 import org.dihedron.crypto.providers.AutoCloseableProvider;
@@ -52,7 +51,7 @@ public class SmartCardProviderFactory extends ProviderFactory<SmartCardTraits> {
 	 * @throws UnavailableDriverException 
 	 */
 	@Override
-	public AutoCloseableProvider getProvider(SmartCardTraits traits) throws ProviderException {
+	public AutoCloseableProvider getProvider(SmartCardTraits traits) throws UnavailableDriverException, SmartCardException {
 		if(traits == null) {
 			logger.warn("invalid smart card traits");
 			return null;
@@ -119,45 +118,6 @@ public class SmartCardProviderFactory extends ProviderFactory<SmartCardTraits> {
 			}
 		}
 	}
-
-//	/**
-//	 * Uninstalls the given provider; smart cards instantiate a new provider for 
-//	 * each different smart card, in order to support multiple initialisation 
-//	 * parameters, and these custom providers need to be uninstalled once one is 
-//	 * done using them. 
-//	 * 
-//	 * @param provider
-//	 *   the provider to uninstall.
-//	 */
-//	@Override
-//	public void release(Provider provider) {
-//		if(provider != null) {
-//			try {
-//				if(provider.getClass().getName().equals(SmartCardTraits.SUN_PKCS11_PROVIDER_CLASS)) {
-//					logger.info("Sun PKCS#11 provider detected, trying to log out...");
-//					Method logout = null;
-//					Class<?> clazz = provider.getClass();
-//					while(clazz != null && clazz != Object.class && logout == null) {
-//						logout = clazz.getDeclaredMethod("logout");
-//						clazz = clazz.getSuperclass();
-//					}
-//					if(logout != null) {
-//						logger.trace("... invoking logout() on provider");
-//						logout.invoke(provider);
-//						logger.info("... logged out of provider");
-//					}
-//				}
-//			} catch(NoSuchMethodException e) {
-//				logger.error("no method logout() on Sun PKCS#11 provider", e);
-//			} catch (IllegalAccessException e) {
-//				logger.error("illegal access to method logout() on Sun PKCS#11 provider", e);
-//			} catch (IllegalArgumentException e) {
-//				logger.error("illegal arguments to method logout() on Sun PKCS#11 provider", e);
-//			} catch (InvocationTargetException e) {
-//				logger.error("error trying to invoke logout() method on Sun PKCS#11 provider", e);
-//			}
-//		}		
-//	}
 	
 	/**
 	 * Helper class to format a PKCS#11 configuration file.

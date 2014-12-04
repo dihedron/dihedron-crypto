@@ -242,12 +242,12 @@ public abstract class KeyRing implements AutoCloseable {
 	 *   if an error occurs extracting the certificate for the given alias from
 	 *   the key store.
 	 */
-	public Certificate getCertificate(String alias) throws CryptoException {
+	public Certificate getCertificate(String alias) throws KeyStoreException {
 		try {
 			return keystore.getCertificate(alias);
 		} catch (KeyStoreException e) {
 			logger.error("error accessing the keystore", e);
-			throw new CryptoException("error accessing the keystore", e);			
+			throw e;			
 		}
 	}
 
@@ -282,8 +282,9 @@ public abstract class KeyRing implements AutoCloseable {
 	 *   a list of signature aliases.
 	 * @throws CryptoException 
 	 *   if it cannot enumerate aliases in the keystore.
+	 * @throws KeyStoreException 
 	 */
-	public List<String> getSignatureKeyAliases() throws CryptoException {
+	public List<String> getSignatureKeyAliases() throws KeyStoreException {
 		
 		try {
 			List<String> signatureAliases = new ArrayList<String>();
@@ -315,7 +316,7 @@ public abstract class KeyRing implements AutoCloseable {
 			return signatureAliases;
 		} catch(KeyStoreException e) {
 			logger.error("error accessing the keystore to enumerate aliases", e);
-			throw new CryptoException("error accessing the keystore to enumerate aliases", e);						
+			throw e;						
 		}
 	}
 	
@@ -326,10 +327,10 @@ public abstract class KeyRing implements AutoCloseable {
 	 *   the name of the alias.
 	 * @return
 	 *   the certificate chain.
-	 * @throws CryptoException 
+	 * @throws GeneralSecurityException 
 	 *   if it cannot reconstruct the certificate chain.
 	 */
-	public List<Certificate> getCertificateChain(String signatureAlias) throws CryptoException {
+	public List<Certificate> getCertificateChain(String signatureAlias) throws GeneralSecurityException {
 		try {
 			ArrayList<Certificate> list = new ArrayList<Certificate>();
 			Certificate[] certificates = keystore.getCertificateChain(signatureAlias);
@@ -339,7 +340,7 @@ public abstract class KeyRing implements AutoCloseable {
 			return list;
 		} catch(GeneralSecurityException e) {
 			logger.error("error retrieving certificate chain for alias '{}'", signatureAlias);
-			throw new CryptoException("error retrieving certificate chain for alias '" + signatureAlias + "'", e);
+			throw e;
 		}
 	}
 
@@ -350,10 +351,10 @@ public abstract class KeyRing implements AutoCloseable {
 	 *   the name of the alias.
 	 * @return
 	 *   an array of Certificates, or <code>null</code> if none found.
-	 * @throws CryptoException 
+	 * @throws GeneralSecurityException 
 	 *   if it cannot reconstruct the certificate chain.
 	 */
-	public Certificate[] getCertificateChainAsArray(String signatureAlias) throws CryptoException {
+	public Certificate[] getCertificateChainAsArray(String signatureAlias) throws GeneralSecurityException {
 		List<Certificate> chain = getCertificateChain(signatureAlias);
 		if(chain != null && chain.size() > 0) {
 			Certificate [] certificates = new Certificate[chain.size()];

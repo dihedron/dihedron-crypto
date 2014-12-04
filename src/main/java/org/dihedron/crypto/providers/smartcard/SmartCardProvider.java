@@ -45,7 +45,7 @@ public class SmartCardProvider extends AutoCloseableProvider {
 	 * @see java.lang.AutoCloseable#close()
 	 */
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		if(provider != null) {
 			logger.info("closing provider '{}'...", this.getName());
 			try {

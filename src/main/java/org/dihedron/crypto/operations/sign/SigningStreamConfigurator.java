@@ -3,7 +3,9 @@
  */
 package org.dihedron.crypto.operations.sign;
 
+import java.security.GeneralSecurityException;
 import java.security.Key;
+import java.security.KeyStoreException;
 import java.security.Provider;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateExpiredException;
@@ -312,8 +314,10 @@ public class SigningStreamConfigurator {
 	 * @return
 	 *   the certificate, if validated.
 	 * @throws CryptoException 
+	 * @throws KeyStoreException
+	 * @throws GeneralSecurityException 
 	 */
-	public X509Certificate getCertificate() throws CryptoException {
+	public X509Certificate getCertificate() throws CryptoException, KeyStoreException, GeneralSecurityException {
 		
 		X509Certificate certificate = null;
 		try {

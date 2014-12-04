@@ -79,7 +79,7 @@ public class AutoCloseableProvider extends Provider implements AutoCloseable {
 	 * @see AutoCloseable#close()
 	 */
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		// by default do nothing
 	}
 	

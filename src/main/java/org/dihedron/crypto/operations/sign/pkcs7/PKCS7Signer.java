@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.Key;
+import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.cert.Certificate;
@@ -71,8 +72,11 @@ public class PKCS7Signer extends Signer {
 	 *   signature.
 	 * @throws CryptoException
 	 *   if any among alias, key ring and provider is null. 
+	 * @throws KeyStoreException 
+	 * @throws CertificateEncodingException 
+	 * @throws CertificateNotYetValidException 
 	 */
-	public PKCS7Signer(String alias, KeyRing keyring, Provider provider, SignatureAlgorithm algorithm) throws CryptoException {
+	public PKCS7Signer(String alias, KeyRing keyring, Provider provider, SignatureAlgorithm algorithm) throws CryptoException, KeyStoreException, CertificateEncodingException, CertificateNotYetValidException {
 		super(alias, keyring, provider);
 		logger.debug("creating PKCS#7 signer with '{}' signature algorithm", algorithm);
 		try {
@@ -125,13 +129,13 @@ public class PKCS7Signer extends Signer {
 			throw new CryptoException("error creating signing operator (BouncyCastle)", e);
 		} catch (CertificateEncodingException e) {
 			logger.error("invalid certificate encoding", e);
-			throw new org.dihedron.crypto.exceptions.CertificateEncodingException("invalid certificate encoding", e);
+			throw e;
 		} catch (CertificateExpiredException e) {
 			logger.error("expired certificate", e);
 			throw new org.dihedron.crypto.exceptions.CertificateExpiredException("expired certificate", e);
 		} catch (CertificateNotYetValidException e) {
 			logger.error("certificate is not yet valid (may still need to be activated?)", e);
-			throw new org.dihedron.crypto.exceptions.CertificateNotYetValidException("certificate not yet valid", e);
+			throw e;
 		} catch (CMSException e) {
 			logger.error("error adding certificates to signature generator", e);
 			throw new CryptoException("CMS error", e);
@@ -153,8 +157,11 @@ public class PKCS7Signer extends Signer {
 	 *   the algorithm used to encrypt the hash.
 	 * @throws CryptoException
 	 *   if any among alias, key ring and provider is null. 
+	 * @throws KeyStoreException 
+	 * @throws CertificateNotYetValidException 
+	 * @throws CertificateEncodingException 
 	 */
-	public PKCS7Signer(String alias, KeyRing keyring, Provider provider, String digest, String encryption) throws CryptoException {
+	public PKCS7Signer(String alias, KeyRing keyring, Provider provider, String digest, String encryption) throws CryptoException, CertificateEncodingException, CertificateNotYetValidException, KeyStoreException {
 		  this(alias, keyring, provider, SignatureAlgorithm.fromAlgorithmDescriptions(digest, encryption));
 	}
 

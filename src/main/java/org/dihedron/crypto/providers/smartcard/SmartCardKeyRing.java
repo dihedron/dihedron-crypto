@@ -43,8 +43,11 @@ public class SmartCardKeyRing extends KeyRing {
 	 *   the Provider used to acquire a reference to the KeyStore.
 	 * @param password
 	 *   the key store password (PIN).
+	 * @throws InvalidPinException 
+	 * @throws LockedPinException 
+	 * @throws CryptoException
 	 */
-	public SmartCardKeyRing(Provider provider, String password) throws CryptoException {
+	public SmartCardKeyRing(Provider provider, String password) throws InvalidPinException, LockedPinException, CryptoException {
 		try {
 			
 			if(keystore != null) {

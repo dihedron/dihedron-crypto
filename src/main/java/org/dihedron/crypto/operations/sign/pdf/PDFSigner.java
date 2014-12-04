@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.PrivateKey;
 import java.security.Provider;
@@ -58,15 +59,16 @@ public class PDFSigner extends Signer {
 	
 	private Mode mode = null;
 	
-	public PDFSigner(String alias, KeyRing keyring, Provider provider) throws CryptoException {
+	public PDFSigner(String alias, KeyRing keyring, Provider provider) throws GeneralSecurityException, CryptoException {
 		this(alias, keyring, provider, Mode.CONCURRENT);
 	}
 	
 	/**
 	 * Constructor.
 	 * @throws CryptoException 
+	 * @throws GeneralSecurityException 
 	 */
-	public PDFSigner(String alias, KeyRing keyring, Provider provider, Mode mode) throws CryptoException {
+	public PDFSigner(String alias, KeyRing keyring, Provider provider, Mode mode) throws GeneralSecurityException, CryptoException {
 		super(alias, keyring, provider);
 		this.mode = mode;
 
