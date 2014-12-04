@@ -75,8 +75,9 @@ public class PKCS7Signer extends Signer {
 	 * @throws KeyStoreException 
 	 * @throws CertificateEncodingException 
 	 * @throws CertificateNotYetValidException 
+	 * @throws CertificateExpiredException 
 	 */
-	public PKCS7Signer(String alias, KeyRing keyring, Provider provider, SignatureAlgorithm algorithm) throws CryptoException, KeyStoreException, CertificateEncodingException, CertificateNotYetValidException {
+	public PKCS7Signer(String alias, KeyRing keyring, Provider provider, SignatureAlgorithm algorithm) throws CryptoException, KeyStoreException, CertificateEncodingException, CertificateNotYetValidException, CertificateExpiredException {
 		super(alias, keyring, provider);
 		logger.debug("creating PKCS#7 signer with '{}' signature algorithm", algorithm);
 		try {
@@ -132,7 +133,7 @@ public class PKCS7Signer extends Signer {
 			throw e;
 		} catch (CertificateExpiredException e) {
 			logger.error("expired certificate", e);
-			throw new org.dihedron.crypto.exceptions.CertificateExpiredException("expired certificate", e);
+			throw e;
 		} catch (CertificateNotYetValidException e) {
 			logger.error("certificate is not yet valid (may still need to be activated?)", e);
 			throw e;
@@ -160,8 +161,9 @@ public class PKCS7Signer extends Signer {
 	 * @throws KeyStoreException 
 	 * @throws CertificateNotYetValidException 
 	 * @throws CertificateEncodingException 
+	 * @throws CertificateExpiredException 
 	 */
-	public PKCS7Signer(String alias, KeyRing keyring, Provider provider, String digest, String encryption) throws CryptoException, CertificateEncodingException, CertificateNotYetValidException, KeyStoreException {
+	public PKCS7Signer(String alias, KeyRing keyring, Provider provider, String digest, String encryption) throws CryptoException, CertificateEncodingException, CertificateNotYetValidException, KeyStoreException, CertificateExpiredException {
 		  this(alias, keyring, provider, SignatureAlgorithm.fromAlgorithmDescriptions(digest, encryption));
 	}
 

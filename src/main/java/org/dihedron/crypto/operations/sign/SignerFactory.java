@@ -7,6 +7,7 @@ package org.dihedron.crypto.operations.sign;
 import java.security.KeyStoreException;
 import java.security.Provider;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 
 import org.dihedron.core.License;
@@ -50,8 +51,9 @@ public class SignerFactory {
 	 * @throws KeyStoreException 
 	 * @throws CertificateNotYetValidException 
 	 * @throws CertificateEncodingException 
+	 * @throws CertificateExpiredException 
 	 */
-	public static Signer makeSigner(EnvelopeFormat format, String alias, KeyRing keyring, Provider provider, SignatureAlgorithm algorithm) throws CryptoException, CertificateEncodingException, CertificateNotYetValidException, KeyStoreException {
+	public static Signer makeSigner(EnvelopeFormat format, String alias, KeyRing keyring, Provider provider, SignatureAlgorithm algorithm) throws CryptoException, CertificateEncodingException, CertificateNotYetValidException, KeyStoreException, CertificateExpiredException {
 		
 		Signer signer = null;
 		

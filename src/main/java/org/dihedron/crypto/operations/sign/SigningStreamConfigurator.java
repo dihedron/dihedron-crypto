@@ -315,9 +315,11 @@ public class SigningStreamConfigurator {
 	 *   the certificate, if validated.
 	 * @throws CryptoException 
 	 * @throws KeyStoreException
+	 * @throws CertificateExpiredException 
+	 * @throws CertificateNotYetValidException 
 	 * @throws GeneralSecurityException 
 	 */
-	public X509Certificate getCertificate() throws CryptoException, KeyStoreException, GeneralSecurityException {
+	public X509Certificate getCertificate() throws CryptoException, KeyStoreException, GeneralSecurityException, CertificateExpiredException, CertificateNotYetValidException {
 		
 		X509Certificate certificate = null;
 		try {
@@ -371,10 +373,10 @@ public class SigningStreamConfigurator {
 			
 		} catch(CertificateExpiredException e) {
 			logger.error("certificate expired at the current date (valid from " + certificate.getNotBefore() + " to " + certificate.getNotAfter() +")", e);
-			throw new org.dihedron.crypto.exceptions.CertificateExpiredException("Certificate expired at the current date (valid from " + certificate.getNotBefore() + " to " + certificate.getNotAfter() +")", e);		
+			throw e;		
 		} catch(CertificateNotYetValidException e) {
 			logger.error("certificate not yet valid at the current date (valid from " + certificate.getNotBefore() + " to " + certificate.getNotAfter() +")", e);
-			throw new org.dihedron.crypto.exceptions.CertificateNotYetValidException("Certificate not yet valid at the current date (valid from " + certificate.getNotBefore() + " to " + certificate.getNotAfter() +")", e);		
+			throw e;		
 		}
 	}
 }

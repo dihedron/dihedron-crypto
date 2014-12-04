@@ -7,11 +7,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.Key;
-import java.security.KeyStoreException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,10 +68,11 @@ public class PKCS7SigningStream extends SigningStream {
 	 *   the output signing stream configurator.
 	 * @throws CryptoException
 	 *   if any of the input parameters is null.
+	 * @throws CertificateNotYetValidException 
+	 * @throws CertificateExpiredException 
 	 * @throws GeneralSecurityException 
-	 * @throws KeyStoreException 
 	 */
-	public PKCS7SigningStream(OutputStream output, SigningStreamConfigurator configurator) throws CryptoException, KeyStoreException, GeneralSecurityException {
+	public PKCS7SigningStream(OutputStream output, SigningStreamConfigurator configurator) throws CryptoException, CertificateExpiredException, CertificateNotYetValidException, GeneralSecurityException {
 		super(output, configurator);
 		
 		logger.info("creating PKCS#7 signing filter output stream with '{}' signature algorithm, using certificate alias '{}'", configurator.getAlgorithm(), configurator.getAlias());
