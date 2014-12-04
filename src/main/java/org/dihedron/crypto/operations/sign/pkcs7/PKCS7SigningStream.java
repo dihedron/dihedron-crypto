@@ -72,7 +72,7 @@ public class PKCS7SigningStream extends SigningStream {
 	 * @throws CertificateExpiredException 
 	 * @throws GeneralSecurityException 
 	 */
-	public PKCS7SigningStream(OutputStream output, SigningStreamConfigurator configurator) throws CryptoException, CertificateExpiredException, CertificateNotYetValidException, GeneralSecurityException {
+	public PKCS7SigningStream(OutputStream output, SigningStreamConfigurator configurator) throws CryptoException, CertificateExpiredException, CertificateNotYetValidException, CertificateEncodingException, GeneralSecurityException {
 		super(output, configurator);
 		
 		logger.info("creating PKCS#7 signing filter output stream with '{}' signature algorithm, using certificate alias '{}'", configurator.getAlgorithm(), configurator.getAlias());
@@ -123,13 +123,7 @@ public class PKCS7SigningStream extends SigningStream {
 			throw new CryptoException("error creating signing operator (BouncyCastle)", e);
 		} catch (CertificateEncodingException e) {
 			logger.error("invalid certificate encoding", e);
-			throw new org.dihedron.crypto.exceptions.CertificateEncodingException("invalid certificate encoding", e);
-//		} catch (CertificateExpiredException e) {
-//			logger.error("expired certificate", e);
-//			throw new org.dihedron.crypto.exceptions.CertificateExpiredException("expired certificate", e);
-//		} catch (CertificateNotYetValidException e) {
-//			logger.error("certificate is not yet valid (may still need to be activated?)", e);
-//			throw new org.dihedron.crypto.exceptions.CertificateNotYetValidException("certificate not yet valid", e);
+			throw e;
 		} catch (CMSException e) {
 			logger.error("error adding certificates to signature generator", e);
 			throw new CryptoException("CMS error", e);
