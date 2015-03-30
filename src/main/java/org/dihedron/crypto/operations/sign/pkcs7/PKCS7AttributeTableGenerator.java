@@ -34,7 +34,9 @@ import org.slf4j.LoggerFactory;
 @License
 public class PKCS7AttributeTableGenerator extends DefaultSignedAttributeTableGenerator {
 	
-	/** The logger. */
+	/** 
+	 * The logger. 
+	 */
 	private static Logger logger = LoggerFactory.getLogger(PKCS7AttributeTableGenerator.class);
 
 	private DigestAlgorithm digestAlgorithm;

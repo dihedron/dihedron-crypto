@@ -122,32 +122,33 @@ public final class TrustAnchors {
 		logger.trace("acquiring root CAs from TSL '{}'", tslURL);
 		
 		URL url = URLFactory.makeURL(tslURL);
-		try (InputStream stream = url.openStream()){
-			logger.trace("stream opened");
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			logger.trace("XML document builder ready, reading");
-			Document document = builder.parse(stream);
-			logger.trace("XML read and parsed");
-			List<Element> nodes = DOM.getDescendantsByTagName(document, "X509Certificate");
-			logger.trace("{} nodes found", nodes.size());
-			Base64CertificateLoader loader = new Base64CertificateLoader();			
-			for(Element node : nodes) {
-				String data = node.getTextContent();
-				try {
-					X509Certificate certificate = (X509Certificate)loader.loadCertificate(data);				
-//					logger.trace("adding certificate '{}' to root CAs", certificate.getSubjectDN());
-					trustAnchors.add(certificate);
-				} catch(Exception e) {
-					logger.warn("discarding invalid (unparseable) certificate data '{}'", data);
+		if(url != null) {
+			try (InputStream stream = url.openStream()){
+				logger.trace("stream opened");
+				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+				logger.trace("XML document builder ready, reading");
+				Document document = builder.parse(stream);
+				logger.trace("XML read and parsed");
+				List<Element> nodes = DOM.getDescendantsByTagName(document, "X509Certificate");
+				logger.trace("{} nodes found", nodes.size());
+				Base64CertificateLoader loader = new Base64CertificateLoader();			
+				for(Element node : nodes) {
+					String data = node.getTextContent();
+					try {
+						X509Certificate certificate = (X509Certificate)loader.loadCertificate(data);				
+	//					logger.trace("adding certificate '{}' to root CAs", certificate.getSubjectDN());
+						trustAnchors.add(certificate);
+					} catch(Exception e) {
+						logger.warn("discarding invalid (unparseable) certificate data '{}'", data);
+					}
 				}
-				
+			} catch (ParserConfigurationException | SAXException | IOException e) {
+				logger.error("error acquiring TSL from '" + tslURL + "'", e);
+				trustAnchors = null;
+			} catch (CertificateLoaderException e) {
+				logger.error("error initialising certificate loader", e);
+				trustAnchors = null;
 			}
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			logger.error("error acquiring TSL from '" + tslURL + "'", e);
-			trustAnchors = null;
-		} catch (CertificateLoaderException e) {
-			logger.error("error initialising certificate loader", e);
-			trustAnchors = null;
 		}
 		
 		return trustAnchors;
