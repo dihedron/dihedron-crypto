@@ -29,6 +29,7 @@ import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -200,15 +201,6 @@ public final class Certificates extends CryptoService {
 	 */
 	public static PKIXCertPathBuilderResult verifyCertificate(X509Certificate certificate, Collection<X509Certificate> additionalCerts) throws CertificateVerificationException {
 		try {
-			
-			logger.trace("verifying certificate:\n{}", certificate);
-			
-			// check for self-signed certificate
-			if (isSelfSigned(certificate)) {
-				logger.error("certificate is self signed");
-				throw new CertificateVerificationException("the certificate is self-signed");
-			}
-
 			// prepare a set of trusted root CA certificates and a set of
 			// intermediate certificates
 			Set<X509Certificate> trustedRootCerts = new HashSet<>();
@@ -222,9 +214,50 @@ public final class Certificates extends CryptoService {
 					intermediateCerts.add(additionalCert);
 				}
 			}
+			
+			return verifyCertificate(certificate, trustedRootCerts, intermediateCerts, null);
+		} catch (CertificateException | NoSuchAlgorithmException | NoSuchProviderException e) {
+			logger.error("error verifying certificate " + certificate.getSubjectX500Principal(), e);
+			throw new CertificateVerificationException("Error verifying the certificate: " + certificate.getSubjectX500Principal(), e);
+		}
+	}
+	
+	/**
+	 * Attempts to build a certification chain for given certificate and to
+	 * verify it. Relies on a set of root CA certificates and intermediate
+	 * certificates that will be used for building the certification chain. The
+	 * verification process assumes that all self-signed certificates in the set
+	 * are trusted root CA certificates and all other certificates in the set
+	 * are intermediate certificates.
+	 * 
+	 * @param certificate
+	 *   certificate for validation.
+	 * @param intermediateCerts intermediate CA certificates
+	 * @param trustedRootCerts trusted root CA certificates
+	 * @param date to use during validation useful if want to check the chain on a
+	 * 	 certificate that is not yet valid
+	 * @return 
+	 *   the certification chain (if verification is successful).
+	 * @throws CertificateVerificationException
+	 *   if the certification is not successful (e.g. certification path cannot 
+	 *   be built or some certificate in the chain is expired or CRL checks are 
+	 *   failed).
+	 */
+	public static PKIXCertPathBuilderResult verifyCertificate(X509Certificate certificate, Collection<X509Certificate> intermediateCerts, Collection<X509Certificate> trustedRootCerts, Date date) throws CertificateVerificationException {
+		try {
+			
+			logger.trace("verifying certificate:\n{}", certificate);
+			
+			// check for self-signed certificate
+			if (isSelfSigned(certificate)) {
+				logger.error("certificate is self signed");
+				throw new CertificateVerificationException("the certificate is self-signed");
+			}
+
+
 
 			// attempt to build the certification chain and verify it
-			PKIXCertPathBuilderResult verifiedCertChain = verifyCertificate(certificate, trustedRootCerts, intermediateCerts);
+			PKIXCertPathBuilderResult verifiedCertChain = verifyCertificateChain(certificate, trustedRootCerts, intermediateCerts, date);
 
 			logger.info("certification chain verified");
 			
@@ -271,7 +304,7 @@ public final class Certificates extends CryptoService {
 	 *   if the verification is not successful (e.g. certification path cannot 
 	 *   be built or some certificate in the chain is expired).
 	 */
-	private static PKIXCertPathBuilderResult verifyCertificate(X509Certificate certificate, Collection<X509Certificate> trustedRootCerts, Collection<X509Certificate> intermediateCerts) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, CertPathBuilderException {
+	private static PKIXCertPathBuilderResult verifyCertificateChain(X509Certificate certificate, Collection<X509Certificate> trustedRootCerts, Collection<X509Certificate> intermediateCerts, Date date) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, CertPathBuilderException {
 
 		// create the selector that specifies the starting certificate
 		X509CertSelector selector = new X509CertSelector();
@@ -285,7 +318,7 @@ public final class Certificates extends CryptoService {
 
 		// configure the PKIX certificate builder algorithm parameters
 		PKIXBuilderParameters pkixParams = new PKIXBuilderParameters(trustAnchors, selector);
-
+		pkixParams.setDate(date);
 		// disable CRL checks (this is done manually as an additional step)
 		pkixParams.setRevocationEnabled(false);
 
